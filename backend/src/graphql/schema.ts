@@ -75,6 +75,31 @@ export const resolvers = {
   Mutation: {
     addBloodSack: (_: any, { input }: { input: any }) => {
       const bloodSacks = noSqlDb.get('bloodSacks') || [];
+      // Server-side validation to prevent invalid entries
+      const errors: string[] = [];
+      const name = typeof input.name === 'string' ? input.name.trim() : '';
+      const bloodType = input.bloodType;
+      const age = Number(input.age);
+      const location = input.location;
+      const quality = input.quality || 'Average';
+
+      const allowedBloodTypes = ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'];
+      const allowedQualities = ['Premium', 'Good', 'Average', 'Poor'];
+      const allowedLocations = ['Downtown', 'University District', 'Business District', 'Suburbs', 'Industrial Area'];
+
+      if (name.length < 2) errors.push('Name must be at least 2 characters');
+      if (!allowedBloodTypes.includes(bloodType)) errors.push('Invalid blood type');
+      if (!Number.isFinite(age) || age < 18 || age > 100) errors.push('Age must be between 18 and 100');
+      if (typeof location !== 'string' || location.length === 0) {
+        errors.push('Location is required');
+      } else if (!allowedLocations.includes(location)) {
+        errors.push('Invalid location');
+      }
+      if (quality && !allowedQualities.includes(quality)) errors.push('Invalid quality');
+
+      if (errors.length > 0) {
+        throw new Error(errors.join('; '));
+      }
       const newSack = {
         id: Date.now().toString(),
         name: input.name,
@@ -82,8 +107,8 @@ export const resolvers = {
         age: input.age,
         location: input.location,
         isRecruited: false,
-        pricePerPint: calculatePrice(input.bloodType, input.quality || 'Average'),
-        quality: input.quality || 'Average',
+        pricePerPint: calculatePrice(bloodType, quality),
+        quality,
         lastSeen: new Date().toISOString(),
         notes: input.notes || ''
       };
@@ -102,10 +127,14 @@ export const resolvers = {
         throw new Error('Blood sack not found');
       }
 
-      // BUG B-2: Not updating the recruited status properly
-      // bloodSacks[sackIndex].isRecruited = true;
-      // bloodSacks[sackIndex].recruitedDate = new Date().toISOString();
-      // bloodSacks[sackIndex].pricePerPint = 0;
+      // Mark as recruited and persist
+      bloodSacks[sackIndex] = {
+        ...bloodSacks[sackIndex],
+        isRecruited: true,
+        recruitedDate: new Date().toISOString(),
+        // Once recruited, they no longer require payment per pint
+        pricePerPint: 0,
+      };
 
       noSqlDb.set('bloodSacks', bloodSacks);
       

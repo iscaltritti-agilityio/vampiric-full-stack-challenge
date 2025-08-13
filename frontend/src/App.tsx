@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { VampireProfile } from './components/VampireProfile'
 import { BloodSacks } from './components/BloodSacks'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { AuthProvider, useAuth } from './components/AuthProvider'
+import { LoginForm } from './components/LoginForm'
 import './App.css'
 
 type Tab = 'profile' | 'bloodsacks';
 
-function App() {
+function AppContent() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
+  const { isAuthenticated } = useAuth();
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -26,30 +30,46 @@ function App() {
         <p>Manage your eternal existence and hunt for fresh blood</p>
       </header>
 
-      <nav className="app-nav">
-        <button 
-          className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveTab('profile')}
-        >
-          🧛‍♂️ My Profile
-        </button>
-        <button 
-          className={`nav-button ${activeTab === 'bloodsacks' ? 'active' : ''}`}
-          onClick={() => setActiveTab('bloodsacks')}
-        >
-          🩸 Blood Sacks
-        </button>
-      </nav>
+      <LoginForm />
 
-      <main className="app-main">
-        {renderTabContent()}
-      </main>
+      {isAuthenticated && (
+        <>
+          <nav className="app-nav">
+            <button 
+              className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
+              onClick={() => setActiveTab('profile')}
+            >
+              🧛‍♂️ My Profile
+            </button>
+            <button 
+              className={`nav-button ${activeTab === 'bloodsacks' ? 'active' : ''}`}
+              onClick={() => setActiveTab('bloodsacks')}
+            >
+              🩸 Blood Sacks
+            </button>
+          </nav>
+
+          <main className="app-main">
+            <ErrorBoundary>
+              {renderTabContent()}
+            </ErrorBoundary>
+          </main>
+        </>
+      )}
 
       <footer className="app-footer">
         <p>REST for Profile • GraphQL for Blood Sacks • SQL + NoSQL • Est. 1347 AD</p>
       </footer>
     </div>
   )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
 }
 
 export default App

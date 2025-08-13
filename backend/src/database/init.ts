@@ -35,9 +35,23 @@ function createTables() {
         clan TEXT NOT NULL,
         preferred_blood_type TEXT NOT NULL,
         hunting_territory TEXT NOT NULL,
+        profile_picture TEXT,
         last_fed DATETIME DEFAULT CURRENT_TIMESTAMP,
         power_level INTEGER DEFAULT 50,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Feeding history table
+    sqlDb.run(`
+      CREATE TABLE feeding_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        vampire_id INTEGER NOT NULL,
+        fed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        power_gained INTEGER DEFAULT 10,
+        location TEXT,
+        notes TEXT,
+        FOREIGN KEY (vampire_id) REFERENCES vampire_profiles (id)
       )
     `);
 
@@ -72,6 +86,21 @@ function insertSampleData() {
     vampireProfile.last_fed,
     vampireProfile.power_level
   ]);
+
+  // Sample feeding history
+  const feedingHistory = [
+    { fed_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), power_gained: 15, location: 'Downtown District', notes: 'Excellent hunt, O- blood type' },
+    { fed_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), power_gained: 10, location: 'University District', notes: 'Student, young and healthy' },
+    { fed_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), power_gained: 12, location: 'Business District', notes: 'Late night worker, good quality' },
+    { fed_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), power_gained: 8, location: 'Suburbs', notes: 'Quick feed, average quality' }
+  ];
+
+  feedingHistory.forEach(feeding => {
+    sqlDb.run(`
+      INSERT INTO feeding_history (vampire_id, fed_at, power_gained, location, notes) 
+      VALUES (1, ?, ?, ?, ?)
+    `, [feeding.fed_at, feeding.power_gained, feeding.location, feeding.notes]);
+  });
 }
 
 function initNoSqlCollections() {
