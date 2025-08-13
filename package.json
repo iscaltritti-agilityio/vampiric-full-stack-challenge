@@ -1,0 +1,17 @@
+{
+  "name": "live-code-challenge",
+  "version": "1.0.0",
+  "description": "Vampiric Full Stack Developer Challenge - Prove your worth to the eternal coven",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "start": "npm run dev"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
