@@ -5,10 +5,14 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "setup:python": "npm install && cd frontend && npm install && cd ../backend-python && pip install -r requirements.txt",
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "dev:python": "concurrently \"npm run backend:python:dev\" \"npm run frontend:dev\"",
     "backend:dev": "cd backend && npm run dev",
+    "backend:python:dev": "python backend-python/run.py",
     "frontend:dev": "cd frontend && npm run dev",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "start:python": "npm run dev:python"
   },
   "license": "MIT",
   "devDependencies": {
