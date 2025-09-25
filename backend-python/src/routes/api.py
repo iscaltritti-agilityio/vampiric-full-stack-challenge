@@ -85,7 +85,7 @@ async def vampire_feed():
         
         sql_db.commit()
         
-        # Return updated profile - same as Node version
+        # Return updated profile
         sql_db.row_factory = dict_factory
         cursor = sql_db.cursor()
         cursor.execute('SELECT * FROM vampire_profiles WHERE id = 1')

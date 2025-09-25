@@ -96,7 +96,7 @@ class Mutation:
         blood_sacks = nosql_db.get('bloodSacks', [])
         
         new_sack = {
-            'id': str(int(time.time() * 1000)),  # Use timestamp like Node version
+            'id': str(int(time.time() * 1000)),
             'name': input.name,
             'bloodType': input.bloodType,
             'age': input.age,
