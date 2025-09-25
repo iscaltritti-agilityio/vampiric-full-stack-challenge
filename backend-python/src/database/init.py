@@ -13,7 +13,7 @@ def init_database():
     _sql_db = sqlite3.connect(':memory:', check_same_thread=False)
     _sql_db.row_factory = sqlite3.Row
     
-    print('📦 SQLite database connected')
+    print('SQLite database connected')
     _create_tables()
     
     # Initialize NoSQL collections
@@ -125,7 +125,7 @@ def _init_nosql_collections():
     # Store in NoSQL database
     _nosql_db['bloodSacks'] = blood_sacks
     
-    print('🩸 Blood sacks database initialized')
+    print('Blood sacks database initialized')
 
 def get_sql_db() -> sqlite3.Connection:
     return _sql_db

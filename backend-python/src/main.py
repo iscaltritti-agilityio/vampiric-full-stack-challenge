@@ -39,8 +39,8 @@ async def health_check():
 def main():
     port = int(os.getenv("PORT", 4000))
     
-    print(f"🚀 Server running on http://localhost:{port}")
-    print(f"📊 GraphQL endpoint: http://localhost:{port}/graphql")
+    print(f"Server running on http://localhost:{port}")
+    print(f"GraphQL endpoint: http://localhost:{port}/graphql")
     
     try:
         uvicorn.run(
