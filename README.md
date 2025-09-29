@@ -8,12 +8,23 @@ Welcome, mortal developer, to the Eternal Night Coding Challenge. You have been 
 
 ## Awakening the Beast
 
+Choose your backend technology:
+
+### Node.js Backend (default)
 ```bash
 npm run setup
 npm start
 ```
 
+### Python Backend
+```bash
+npm run setup:python
+npm run start:python
+```
+
 Enter our digital lair at: http://localhost:3000
+
+*Note: Both backends provide identical functionality and bugs. Choose your preferred stack freely.*
 
 ## 🕷️ Primary Objective: Pest Control (Bug Hunt)
 *Our ancient codebase has been infected by mortal incompetence. Fix ALL of these issues:*
