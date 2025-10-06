@@ -127,7 +127,7 @@ class Mutation:
         if sack_index is None:
             raise Exception('Blood sack not found')
         
-        # BUG B-2: Not updating the recruited status properly
+        # BUG B-3: Blood sack "Recruit" button doesn't work
         # blood_sacks[sack_index]['isRecruited'] = True
         # blood_sacks[sack_index]['recruitedDate'] = datetime.now().isoformat()
         # blood_sacks[sack_index]['pricePerPint'] = 0

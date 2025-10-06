@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import datetime
 import sqlite3
+import re
+from typing import Union
 from ..database.init import get_sql_db
 
 api_router = APIRouter()
@@ -9,10 +11,31 @@ api_router = APIRouter()
 class VampireProfileUpdate(BaseModel):
     name: str
     email: str
-    age: int
+    age: Union[str, int]
     clan: str
     preferred_blood_type: str
     hunting_territory: str
+    
+    @validator('age')
+    def validate_age(cls, v):
+        if isinstance(v, str):
+            try:
+                age_int = int(v)
+            except ValueError:
+                raise ValueError('Age must be a valid number')
+        else:
+            age_int = v
+            
+        if not isinstance(age_int, int) or age_int < 18 or age_int > 5000:
+            raise ValueError('Age must be a valid number between 18 and 5000')
+        return age_int
+    
+    @validator('email')
+    def validate_email(cls, v):
+        email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+        if not re.match(email_regex, v):
+            raise ValueError('Please enter a valid email address')
+        return v
 
 def dict_factory(cursor, row):
     """Convert sqlite3.Row to dict"""
@@ -41,9 +64,9 @@ async def update_vampire_profile(profile_data: VampireProfileUpdate):
     sql_db = get_sql_db()
     cursor = sql_db.cursor()
     
-    # BUG B-1 & B-3: Missing validation - should check for required fields
-    # if not profile_data.name or not profile_data.email or not profile_data.age or not profile_data.clan or not profile_data.preferred_blood_type or not profile_data.hunting_territory:
-    #     raise HTTPException(status_code=400, detail='All profile fields are required')
+    # Validate required fields
+    if not profile_data.name or not profile_data.email or not profile_data.age or not profile_data.clan or not profile_data.preferred_blood_type or not profile_data.hunting_territory:
+        raise HTTPException(status_code=400, detail='All profile fields are required')
     
     try:
         cursor.execute('''
@@ -61,7 +84,7 @@ async def update_vampire_profile(profile_data: VampireProfileUpdate):
         
         sql_db.commit()
         
-        # BUG B-1 (part 2): Not returning updated data - just sends success without data
+        # BUG B-2: Vampire profile updates aren't reflected properly
         return {'success': True, 'message': 'Profile updated successfully'}
         
     except sqlite3.Error as e:

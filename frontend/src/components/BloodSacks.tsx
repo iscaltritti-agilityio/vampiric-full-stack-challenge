@@ -71,6 +71,7 @@ interface BloodSackFilter {
 export function BloodSacks() {
   const [showForm, setShowForm] = useState(false);
   const [filters, setFilters] = useState<BloodSackFilter>({});
+  const [recruitingIds, setRecruitingIds] = useState<Set<string>>(new Set());
   const [formData, setFormData] = useState({
     name: '',
     bloodType: '',
@@ -85,11 +86,11 @@ export function BloodSacks() {
   const locations = ['Downtown', 'University District', 'Business District', 'Suburbs', 'Industrial Area'];
 
   // GraphQL queries and mutations
-  const { loading, error, data, refetch } = useQuery(GET_BLOOD_SACKS, {
+  const { loading, error, data } = useQuery(GET_BLOOD_SACKS, {
     variables: { filter: filters }
   });
   
-  const [recruitBloodSack, { loading: recruitLoading }] = useMutation(RECRUIT_BLOOD_SACK, {
+  const [recruitBloodSack] = useMutation(RECRUIT_BLOOD_SACK, {
     refetchQueries: [{ query: GET_BLOOD_SACKS, variables: { filter: filters } }]
   });
 
@@ -98,10 +99,17 @@ export function BloodSacks() {
   });
 
   const handleRecruit = async (id: string) => {
+    setRecruitingIds(prev => new Set(prev).add(id));
     try {
       await recruitBloodSack({ variables: { id } });
     } catch (error) {
       console.error('Failed to recruit blood sack:', error);
+    } finally {
+      setRecruitingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
     }
   };
 
@@ -344,37 +352,27 @@ export function BloodSacks() {
         <div className="data-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
           {bloodSacks.map((sack: BloodSack) => (
             <div key={sack.id} className="data-card" style={{
-              borderLeft: `4px solid ${sack.isRecruited ? '#28a745' : '#dc3545'}`
+              borderLeft: `4px solid ${sack.isRecruited ? '#28a745' : '#dc3545'}`,
+              display: 'flex',
+              flexDirection: 'column'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                 <h3 style={{ margin: 0, color: '#333' }}>{sack.name}</h3>
-                {sack.isRecruited ? (
+                {sack.isRecruited && (
                   <span style={{ 
                     padding: '0.25rem 0.5rem', 
                     borderRadius: '4px', 
                     fontSize: '0.75rem', 
                     background: '#d4edda',
-                    color: '#155724'
+                    color: '#155724',
+                    fontWeight: 'bold'
                   }}>
-                    RECRUITED
+                    ✓ RECRUITED
                   </span>
-                ) : (
-                  <button
-                    onClick={() => handleRecruit(sack.id)}
-                    disabled={recruitLoading}
-                    className="button button-primary"
-                    style={{ 
-                      fontSize: '0.8rem', 
-                      padding: '0.25rem 0.5rem',
-                      background: 'linear-gradient(135deg, #8b0000 0%, #ff6b6b 100%)'
-                    }}
-                  >
-                    {recruitLoading ? '...' : 'Recruit'}
-                  </button>
                 )}
               </div>
               
-              <div style={{ display: 'grid', gap: '0.25rem', fontSize: '0.9rem' }}>
+              <div style={{ display: 'grid', gap: '0.25rem', fontSize: '0.9rem', flex: 1 }}>
                 <div><strong>🩸 Blood Type:</strong> {sack.bloodType}</div>
                 <div><strong>👤 Age:</strong> {sack.age} years</div>
                 <div><strong>📍 Location:</strong> {sack.location}</div>
@@ -392,6 +390,44 @@ export function BloodSacks() {
                   </div>
                 )}
               </div>
+                {!sack.isRecruited && (
+                <button
+                  onClick={() => handleRecruit(sack.id)}
+                  disabled={recruitingIds.has(sack.id)}
+                  className="button button-primary"
+                  style={{ 
+                    marginTop: '1rem',
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    background: recruitingIds.has(sack.id) 
+                      ? 'linear-gradient(135deg, #666 0%, #999 100%)' 
+                      : 'linear-gradient(135deg, #8b0000 0%, #ff6b6b 100%)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    color: 'white',
+                    cursor: recruitingIds.has(sack.id) ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    opacity: recruitingIds.has(sack.id) ? 0.7 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!recruitingIds.has(sack.id)) {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!recruitingIds.has(sack.id)) {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                    }
+                  }}
+                >
+                  {recruitingIds.has(sack.id) ? '🔄 Recruiting...' : '🧛‍♂️ Recruit for Coven'}
+                </button>
+              )}
             </div>
           ))}
         </div>

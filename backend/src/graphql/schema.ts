@@ -102,7 +102,7 @@ export const resolvers = {
         throw new Error('Blood sack not found');
       }
 
-      // BUG B-2: Not updating the recruited status properly
+      // BUG B-3: Blood sack "Recruit" button doesn't work
       // bloodSacks[sackIndex].isRecruited = true;
       // bloodSacks[sackIndex].recruitedDate = new Date().toISOString();
       // bloodSacks[sackIndex].pricePerPint = 0;
