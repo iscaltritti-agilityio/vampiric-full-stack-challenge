@@ -35,19 +35,15 @@ Enter our digital lair at: http://localhost:3000
 - **B-3**: Blood sack "Recruit for Coven" button doesn't work
 
 ## 🎯 Secondary Objectives: Feature Enhancements 
-*Choose from these additional improvements if time permits*
+*Choose features that match your skills and desired challenge level*
 
-### 🩸 Blood Management Features
-- **F-1**: Add sorting options for blood sacks (price, quality, last seen)
-- **F-2**: Create feeding history display in vampire profile
-- **F-3**: Add blood sack search by name functionality
-
-### 🧛‍♂️ Profile & UI Enhancements
-- **F-4**: Add profile picture upload functionality
-- **F-5**: Implement better error handling and loading states
-- **F-6**: Add confirmation dialogs for critical actions (feeding, recruitment)
-
-### ⚡ Advanced Features
-- **F-7**: Implement real-time updates for blood sack status changes
-- **F-8**: Add authentication middleware to protect vampire endpoints
-- **F-9**: Write unit tests for critical GraphQL mutations
+| Feature | Description | Frontend | Backend | REST | GraphQL | SQL | Difficulty |
+|---------|-------------|----------|---------|------|---------|-----|------------|
+| **F-1** | Add confirmation dialogs for critical actions (feeding, recruitment) | ✅ | | | | | 🟢 Easy |
+| **F-2** | Add blood sack search by name functionality | ✅ | ✅ | | ✅ | | 🟢 Easy |
+| **F-3** | Write unit tests for REST API endpoints | | ✅ | ✅ | | | 🟢 Easy |
+| **F-4** | Add sorting options for blood sacks (price, quality, last seen) | ✅ | ✅ | | ✅ | | 🟡 Medium |
+| **F-5** | Create feeding history display in vampire profile | ✅ | ✅ | ✅ | | ✅ | 🟡 Medium |
+| **F-6** | Write comprehensive frontend component tests | ✅ | | | | | 🟡 Medium |
+| **F-7** | Add profile picture upload functionality | ✅ | ✅ | ✅ | | ✅ | 🔴 Hard |
+| **F-8** | Implement real-time updates for blood sack status changes | ✅ | ✅ | | ✅ | | 🔴 Hard |
