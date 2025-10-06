@@ -30,9 +30,9 @@ Enter our digital lair at: http://localhost:3000
 *Our ancient codebase has been infected by mortal incompetence. Fix ALL of these issues:*
 
 ### Critical Bugs (Fix All)
-- **B-1**: Profile update form doesn't save changes properly
-- **B-2**: Blood sack recruitment button doesn't work
-- **B-3**: Missing form validation allows invalid data entry
+- **B-1**: Site relies on backend for "vampire profile" data sanitization
+- **B-2**: Vampire profile updates aren't reflected properly
+- **B-3**: Blood sack "Recruit" button doesn't work
 
 ## 🎯 Secondary Objectives: Feature Enhancements 
 *Choose from these additional improvements if time permits*

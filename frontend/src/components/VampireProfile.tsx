@@ -58,12 +58,7 @@ export function VampireProfile() {
     setError(null);
     
     try {
-      const updateData = {
-        ...formData,
-        age: parseInt(formData.age)
-      };
-      
-      const response = await axios.put('/api/vampire/profile', updateData);
+      const response = await axios.put('/api/vampire/profile', formData);
       setProfile(response.data);
       setEditing(false);
     } catch (err: any) {
@@ -162,24 +157,35 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
+                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+                // required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Email:</label>
-              <input
+              { /* BUG B-1: Site relies on backend for "vampire profile" data sanitization*/
+              /*<input
                 type="email"
                 className="form-input"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
+              />*/}
+              <input
+                type="text"
+                className="form-input"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Enter email address"
+                // required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Age (years):</label>
-              <input
+              {/* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+              /*<input
                 type="number"
                 className="form-input"
                 value={formData.age}
@@ -187,6 +193,15 @@ export function VampireProfile() {
                 min="18"
                 max="5000"
                 required
+              /> */}
+              <input
+                type="text"
+                className="form-input"
+                value={formData.age}
+                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                placeholder="Enter age in years"
+                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+                // required
               />
             </div>
 
@@ -196,7 +211,8 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.clan}
                 onChange={(e) => setFormData({ ...formData, clan: e.target.value })}
-                required
+                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+                // required
               >
                 <option value="">Select a clan...</option>
                 {clans.map(clan => (
@@ -211,7 +227,8 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.preferred_blood_type}
                 onChange={(e) => setFormData({ ...formData, preferred_blood_type: e.target.value })}
-                required
+                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+                // required
               >
                 <option value="">Select blood type...</option>
                 {bloodTypes.map(type => (
@@ -228,7 +245,8 @@ export function VampireProfile() {
                 value={formData.hunting_territory}
                 onChange={(e) => setFormData({ ...formData, hunting_territory: e.target.value })}
                 placeholder="e.g., Downtown District, University Campus"
-                required
+                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
+                // required
               />
             </div>
           </div>
