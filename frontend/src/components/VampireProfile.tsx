@@ -224,7 +224,6 @@ export function VampireProfile() {
                 value={formData.age}
                 onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                 min="18"
-                max="5000"
                 required
               />
             </div>
