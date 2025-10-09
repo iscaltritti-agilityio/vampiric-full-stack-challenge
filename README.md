@@ -14,14 +14,18 @@ Choose your backend technology; both provide identical challenge.
 
 ⚠️ **Stick to `npm` and the latest stable version of Node!**
 
-### Node.js Backend (preferred)
+### React Frontend & Node Backend (preferred)
+
+From root, execute:
 
 ```bash
 npm run setup
 npm start
 ```
 
-### Python Backend
+### React Frontend & Python Backend
+
+From root, execute:
 
 ```bash
 npm run setup:python
