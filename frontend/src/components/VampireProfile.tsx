@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 interface VampireProfileData {
   id: number;
@@ -35,18 +34,24 @@ export function VampireProfile() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('/api/vampire/profile');
-      setProfile(response.data);
+      const response = await fetch('/api/vampire/profile');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to load vampire profile');
+      }
+      
+      setProfile(data);
       setFormData({
-        name: response.data.name,
-        email: response.data.email,
-        age: response.data.age.toString(),
-        clan: response.data.clan,
-        preferred_blood_type: response.data.preferred_blood_type,
-        hunting_territory: response.data.hunting_territory
+        name: data.name,
+        email: data.email,
+        age: data.age.toString(),
+        clan: data.clan,
+        preferred_blood_type: data.preferred_blood_type,
+        hunting_territory: data.hunting_territory
       });
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to load vampire profile');
+      setError(err.message || 'Failed to load vampire profile');
     } finally {
       setLoading(false);
     }
@@ -56,13 +61,41 @@ export function VampireProfile() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // B-1
+    // Isn't this like... the opposite way around?
+    const ageNum = Number(formData.age);
+    if (!isNaN(ageNum) && Number.isInteger(ageNum)) {
+      setError('Age must be a valid number');
+      setLoading(false);
+      return;
+    }
+
+    if (ageNum < 18) {
+      setError('🧛‍♂️ We apologize, but we cannot welcome underage vampires to our ancient coven. Please come back when you\'ve reached the age of immortality (18)!');
+      setLoading(false);
+      return;
+    }
     
     try {
-      const response = await axios.put('/api/vampire/profile', formData);
-      setProfile(response.data);
+      const response = await fetch('/api/vampire/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update profile');
+      }
+      
+      setProfile(data);
       setEditing(false);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to update profile');
+      setError(err.message || 'Failed to update profile');
     } finally {
       setLoading(false);
     }
@@ -73,10 +106,19 @@ export function VampireProfile() {
     setError(null);
     
     try {
-      const response = await axios.post('/api/vampire/feed');
-      setProfile(response.data);
+      const response = await fetch('/api/vampire/feed', {
+        method: 'POST',
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to feed vampire');
+      }
+      
+      setProfile(data);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to feed vampire');
+      setError(err.message || 'Failed to feed vampire');
     } finally {
       setLoading(false);
     }
@@ -95,22 +137,24 @@ export function VampireProfile() {
         <h2 className="component-title">🧛‍♂️ Vampire Profile</h2>
         <div style={{ display: 'flex', gap: '1rem' }}>
           {!editing && (
-            <button 
-              className="button button-secondary"
-              onClick={() => setEditing(true)}
-              disabled={loading}
-            >
-              ✏️ Edit Profile
-            </button>
+            <>
+              <button 
+                className="button button-secondary"
+                onClick={() => setEditing(true)}
+                disabled={loading}
+              >
+                ✏️ Edit Profile
+              </button>
+              <button 
+                className="button button-primary"
+                onClick={feedVampire}
+                disabled={loading}
+                style={{ background: 'linear-gradient(135deg, #8b0000 0%, #ff6b6b 100%)' }}
+              >
+                🩸 Feed
+              </button>
+            </>
           )}
-          <button 
-            className="button button-primary"
-            onClick={feedVampire}
-            disabled={loading}
-            style={{ background: 'linear-gradient(135deg, #8b0000 0%, #ff6b6b 100%)' }}
-          >
-            🩸 Feed
-          </button>
         </div>
       </div>
 
@@ -124,7 +168,7 @@ export function VampireProfile() {
             <div style={{ display: 'grid', gap: '0.5rem' }}>
               <div><strong>Name:</strong> {profile.name}</div>
               <div><strong>Email:</strong> {profile.email}</div>
-              <div><strong>Age:</strong> {profile.age} years (quite young for our kind)</div>
+              <div><strong>Age:</strong> {profile.age} years {profile.age < 900 && '(quite young for our kind)'}</div>
               <div><strong>Clan:</strong> House {profile.clan}</div>
               <div><strong>Member Since:</strong> {new Date(profile.created_at).toLocaleDateString()}</div>
             </div>
@@ -157,35 +201,24 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-                // required
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Email:</label>
-              { /* BUG B-1: Site relies on backend for "vampire profile" data sanitization*/
-              /*<input
+              <input
                 type="email"
                 className="form-input"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-              />*/}
-              <input
-                type="text"
-                className="form-input"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Enter email address"
-                // required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Age (years):</label>
-              {/* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-              /*<input
+              <input
                 type="number"
                 className="form-input"
                 value={formData.age}
@@ -193,15 +226,6 @@ export function VampireProfile() {
                 min="18"
                 max="5000"
                 required
-              /> */}
-              <input
-                type="text"
-                className="form-input"
-                value={formData.age}
-                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                placeholder="Enter age in years"
-                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-                // required
               />
             </div>
 
@@ -211,8 +235,7 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.clan}
                 onChange={(e) => setFormData({ ...formData, clan: e.target.value })}
-                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-                // required
+                required
               >
                 <option value="">Select a clan...</option>
                 {clans.map(clan => (
@@ -227,8 +250,7 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.preferred_blood_type}
                 onChange={(e) => setFormData({ ...formData, preferred_blood_type: e.target.value })}
-                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-                // required
+                required
               >
                 <option value="">Select blood type...</option>
                 {bloodTypes.map(type => (
@@ -245,8 +267,7 @@ export function VampireProfile() {
                 value={formData.hunting_territory}
                 onChange={(e) => setFormData({ ...formData, hunting_territory: e.target.value })}
                 placeholder="e.g., Downtown District, University Campus"
-                /* BUG B-1: Site relies on backend for "vampire profile" data sanitization */
-                // required
+                required
               />
             </div>
           </div>
@@ -262,7 +283,10 @@ export function VampireProfile() {
             <button 
               type="button"
               className="button button-secondary"
-              onClick={() => setEditing(false)}
+              onClick={() => {
+                setEditing(false);
+                setError(null);
+              }}
               disabled={loading}
             >
               Cancel

@@ -26,8 +26,11 @@ class VampireProfileUpdate(BaseModel):
         else:
             age_int = v
             
-        if not isinstance(age_int, int) or age_int < 18 or age_int > 5000:
-            raise ValueError('Age must be a valid number between 18 and 5000')
+        if not isinstance(age_int, int):
+            raise ValueError('Age must be a valid number')
+            
+        if age_int < 18:
+            raise ValueError('🧛‍♂️ We apologize, but we cannot welcome underage vampires to our ancient coven. Please come back when you\'ve reached the age of immortality (18)!')
         return age_int
     
     @validator('email')
@@ -84,7 +87,8 @@ async def update_vampire_profile(profile_data: VampireProfileUpdate):
         
         sql_db.commit()
         
-        # BUG B-2: Vampire profile updates aren't reflected properly
+        # BUG B-2
+        # Hmm, doesn't frontend expect to receive the updated profile here instead?
         return {'success': True, 'message': 'Profile updated successfully'}
         
     except sqlite3.Error as e:
@@ -104,19 +108,16 @@ async def vampire_feed():
                 ELSE 100 
             END
             WHERE id = 1
+            RETURNING *
         ''', [now])
         
-        sql_db.commit()
-        
-        # Return updated profile
         sql_db.row_factory = dict_factory
-        cursor = sql_db.cursor()
-        cursor.execute('SELECT * FROM vampire_profiles WHERE id = 1')
         row = cursor.fetchone()
         
         if not row:
             raise HTTPException(status_code=500, detail='Failed to retrieve updated profile')
         
+        sql_db.commit()
         return row
         
     except sqlite3.Error as e:

@@ -26,8 +26,12 @@ apiRoutes.put('/vampire/profile', (req, res) => {
   
   // Validate age is a number
   const ageNum = Number(age);
-  if (isNaN(ageNum) || !Number.isInteger(ageNum) || ageNum < 18 || ageNum > 5000) {
-    return res.status(400).json({ error: 'Age must be a valid number between 18 and 5000' });
+  if (isNaN(ageNum) || !Number.isInteger(ageNum)) {
+    return res.status(400).json({ error: 'Age must be a valid number' });
+  }
+  
+  if (ageNum < 18) {
+    return res.status(400).json({ error: '🧛‍♂️ We apologize, but we cannot welcome underage vampires to our ancient coven. Please come back when you\'ve reached the age of immortality (18)!' });
   }
   
   // Validate email format
@@ -45,7 +49,8 @@ apiRoutes.put('/vampire/profile', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     
-    // BUG B-2: Vampire profile updates aren't reflected properly
+    // B-2
+    // Hmm, doesn't frontend expect to receive the updated profile here instead?
     res.json({ success: true, message: 'Profile updated successfully' });
   });
 });
@@ -53,24 +58,19 @@ apiRoutes.put('/vampire/profile', (req, res) => {
 apiRoutes.post('/vampire/feed', (req, res) => {
   const now = new Date().toISOString();
   
-  sqlDb.run(`
+  sqlDb.get(`
     UPDATE vampire_profiles 
     SET last_fed = ?, power_level = CASE 
       WHEN power_level < 90 THEN power_level + 10 
       ELSE 100 
     END
     WHERE id = 1
-  `, [now], function(err) {
+    RETURNING *
+  `, [now], function(err, row) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     
-    // Return updated profile
-    sqlDb.get('SELECT * FROM vampire_profiles WHERE id = 1', (err, row) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json(row);
-    });
+    res.json(row);
   });
 });

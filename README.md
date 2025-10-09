@@ -1,12 +1,12 @@
 # 🧛‍♂️ Vampiric Full Stack Challenge
 
-Welcome, mortal developer, to the Eternal Night Coding Challenge.
+Welcome, mortal developer.
 
 You have been *chosen* to prove your worthiness to join our ancient coven of immortal programmers.
 
 Your task: debug and enhance our centuries-old codebase that manages our vampire operations.
 
-**Full AI Usage Encouraged** - Even we vampires use familiar spirits and ancient AI oracles. Use whatever dark magic you would use to take care of the job in a real-world scenario.
+**AI Usage Fully Encouraged** - Even we vampires use familiar spirits and ancient AI oracles. Use whatever dark magic you would use to take care of the job in a real-world scenario.
 
 ## Awakening the Beast
 
@@ -36,9 +36,9 @@ npm run start:python
 
 Our ancient codebase has been infected by mortal incompetence.
 
-- **B-1**: Our site relies on backend for "vampire profile" data sanitization
-- **B-2**: "Vampire profile" updates aren't reflected properly
-- **B-3**: Blood sack "Recruit for Coven" button doesn't work
+- **B-1**: Edit Vampire Profile's age validation works... weirdly
+- **B-2**: Edit Vampire Profile's updates aren't reflected properly
+- **B-3**: Blood Sack's "Recruit for Coven" straight up doesn't work
 
 ## 🎯 Secondary Objectives: Feature Enhancements
 
