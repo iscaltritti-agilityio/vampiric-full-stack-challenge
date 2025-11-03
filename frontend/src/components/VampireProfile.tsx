@@ -62,9 +62,8 @@ export function VampireProfile() {
     setLoading(true);
     setError(null);
 
-    // B-1
-    // Isn't this like... the opposite way around?
     const ageNum = Number(formData.age);
+    // Isn't this like... the opposite way around?
     if (!isNaN(ageNum) && Number.isInteger(ageNum)) {
       setError('Age must be a valid number');
       setLoading(false);
@@ -223,7 +222,6 @@ export function VampireProfile() {
                 className="form-input"
                 value={formData.age}
                 onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                min="18"
                 required
               />
             </div>

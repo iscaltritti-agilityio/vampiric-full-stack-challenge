@@ -49,8 +49,7 @@ apiRoutes.put('/vampire/profile', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     
-    // B-2
-    // Hmm, doesn't frontend expect to receive the updated profile here instead?
+    // Doesn't frontend expect to receive the updated profile here instead?
     res.json({ success: true, message: 'Profile updated successfully' });
   });
 });

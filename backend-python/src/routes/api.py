@@ -87,8 +87,7 @@ async def update_vampire_profile(profile_data: VampireProfileUpdate):
         
         sql_db.commit()
         
-        # B-2
-        # Hmm, doesn't frontend expect to receive the updated profile here instead?
+        # Doesn't frontend expect to receive the updated profile here instead?
         return {'success': True, 'message': 'Profile updated successfully'}
         
     except sqlite3.Error as e:

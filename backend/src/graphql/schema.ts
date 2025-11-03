@@ -101,7 +101,6 @@ export const resolvers = {
         throw new Error('Blood sack not found');
       }
 
-      // B-3
       // Yeah well, no wonder this doesn't work, someone forgot to uncomment this!
       // bloodSacks[sackIndex].isRecruited = true;
       // bloodSacks[sackIndex].recruitedDate = new Date().toISOString();
