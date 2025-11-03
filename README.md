@@ -32,7 +32,7 @@ npm run setup:python
 npm run start:python
 ```
 
-## 🕷️ Primary Objective: Pest Control
+## 🕷️ Objective 1: Pest Control
 
 Our ancient codebase has been infected by mortal incompetence.
 
@@ -40,17 +40,25 @@ Our ancient codebase has been infected by mortal incompetence.
 - **B-2**: Edit Vampire Profile's updates aren't reflected properly
 - **B-3**: Blood Sack's "Recruit for Coven" straight up doesn't work
 
-## 🎯 Secondary Objectives: Feature Enhancements
+## 🎯 Objective 2: Choose Your Immortal Challenge
 
-Choose features that match your skills and desired challenge level.
+After exterminating the bugs above, select **ONE** of these features to implement:
 
-| Feature | Description | Frontend | Backend | REST | GraphQL | SQL | Difficulty |
-|---------|-------------|----------|---------|------|---------|-----|------------|
-| **F-1** | Add confirmation dialogs for critical actions (feeding, recruitment) | ✅ | | | | | 🟢 Easy |
-| **F-2** | Add blood sack search by name functionality | ✅ | ✅ | | ✅ | | 🟢 Easy |
-| **F-3** | Write unit tests for REST API endpoints | | ✅ | ✅ | | | 🟢 Easy |
-| **F-4** | Add sorting options for blood sacks (price, quality, last seen) | ✅ | ✅ | | ✅ | | 🟡 Medium |
-| **F-5** | Create feeding history display in vampire profile | ✅ | ✅ | ✅ | | ✅ | 🟡 Medium |
-| **F-6** | Write comprehensive frontend component tests | ✅ | | | | | 🟡 Medium |
-| **F-7** | Add profile picture upload functionality | ✅ | ✅ | ✅ | | ✅ | 🔴 Hard |
-| **F-8** | Implement real-time updates for blood sack status changes | ✅ | ✅ | | ✅ | | 🔴 Hard |
+### Option A: 📸 Profile Picture Upload
+
+Vampires deserve to update their eternal visage.
+
+**Requirements:**
+- Vampires can upload pictures through the site
+- Uploaded pictures appear in vampire profiles
+- Pictures outlast browsing sessions
+- **Bonus:** Remind us not to take mirror selfies (they'd be empty anyway!)
+
+### Option B: ⚡ Real-Time Blood Sack Status Updates
+
+Vampires need to track blood sacks in real time to trust our site (surely this scales perfectly, right?).
+
+**Requirements:**
+- Changes appear instantly in the other instance with no refresh needed when following these steps:
+    1. Open two browser instances or tabs side-by-side
+    2. Update a blood sack's status in one instance
