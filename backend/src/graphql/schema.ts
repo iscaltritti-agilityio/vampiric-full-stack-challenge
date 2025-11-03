@@ -1,7 +1,6 @@
-import { gql } from 'apollo-server-express';
 import { noSqlDb } from '../database/init';
 
-export const typeDefs = gql`
+export const typeDefs = `
   type BloodSack {
     id: ID!
     name: String!
