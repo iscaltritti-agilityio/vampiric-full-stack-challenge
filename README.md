@@ -44,7 +44,7 @@ Our ancient codebase has been infected by mortal incompetence.
 
 After exterminating the bugs above, select **ONE** of these features to implement:
 
-### Option A: 📸 Profile Picture Upload
+### F-1: 📸 Profile Picture Upload
 
 Vampires deserve to update their eternal visage.
 
@@ -54,7 +54,7 @@ Vampires deserve to update their eternal visage.
 - Pictures outlast browsing sessions
 - **Bonus:** Remind us not to take mirror selfies (they'd be empty anyway!)
 
-### Option B: ⚡ Real-Time Blood Sack Status Updates
+### F-2: ⚡ Real-Time Blood Sack Status Updates
 
 Vampires need to track blood sacks in real time to trust our site (surely this scales perfectly, right?).
 
