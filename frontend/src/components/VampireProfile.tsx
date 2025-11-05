@@ -11,6 +11,7 @@ interface VampireProfileData {
   last_fed: string;
   power_level: number;
   created_at: string;
+  honorific: string;
 }
 
 export function VampireProfile() {
@@ -165,7 +166,7 @@ export function VampireProfile() {
           <div className="data-card">
             <h3 style={{ margin: '0 0 1rem 0', color: '#8b0000' }}>Personal Information</h3>
             <div style={{ display: 'grid', gap: '0.5rem' }}>
-              <div><strong>Name:</strong> {profile.name}</div>
+              <div><strong>Name:</strong> {profile.honorific} {profile.name}</div>
               <div><strong>Email:</strong> {profile.email}</div>
               <div><strong>Age:</strong> {profile.age} years {profile.age < 900 && '(quite young for our kind)'}</div>
               <div><strong>Clan:</strong> House {profile.clan}</div>

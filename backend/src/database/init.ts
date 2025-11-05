@@ -37,7 +37,16 @@ function createTables() {
         hunting_territory TEXT NOT NULL,
         last_fed DATETIME DEFAULT CURRENT_TIMESTAMP,
         power_level INTEGER DEFAULT 50,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        honorific TEXT GENERATED ALWAYS AS (
+          CASE
+            WHEN age >= 1000 THEN 'Ancient One'
+            WHEN age >= 500 THEN 'Elder'
+            WHEN age >= 200 THEN 'Venerable'
+            WHEN age >= 100 THEN 'Established'
+            ELSE 'Fledgling'
+          END
+        ) STORED
       )
     `);
 
